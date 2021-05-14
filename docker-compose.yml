@@ -6,7 +6,7 @@ services:
     working_dir: /workspace
     tty: true
     environment:
-      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock #https://github.com/docker/for-mac/issues/483#issuecomment-620229892
+      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock 
     volumes:
       - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
       - /var/run/docker.sock:/var/run/docker.sock
@@ -15,3 +15,6 @@ services:
 
 volumes:
   workspace:
+
+
+# https://github.com/docker/for-mac/issues/483#issuecomment-620229892

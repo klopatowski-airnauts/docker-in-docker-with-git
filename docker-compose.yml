@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  devenv:
+    image: docker:git
+    working_dir: /workspace
+    tty: true
+    environment:
+      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock #https://github.com/docker/for-mac/issues/483#issuecomment-620229892
+    volumes:
+      - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.gitconfig:/root/.gitconfig
+      - workspace:/workspace/
+
+volumes:
+  workspace:

@@ -10,22 +10,24 @@ services:
     volumes:
       - docker-certs-ca:/certs/ca
       - docker-certs-client:/certs/client
+      - var-lib-docker:/var/lib/docker
     expose:
       - 2376
   docker:
     image: docker
     tty: true
+    working_dir: /workspace
     environment:
       - DOCKER_HOST=tcp://dockerd:2376
       - DOCKER_TLS_VERIFY=1
       - DOCKER_CERT_PATH=/certs/client
     volumes:
       - docker-certs-client:/certs/client:ro
-    depends_on:
-      - dockerd
-  devenv:
-    image: ubuntu
+      - workspace:/workspace
+  git:
+    build: .
     tty: true
+    working_dir: /workspace
     environment:
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock 
     volumes:
@@ -37,5 +39,5 @@ volumes:
   workspace:
   docker-certs-ca:
   docker-certs-client:
-
+  var-lib-docker:
 # https://github.com/docker/for-mac/issues/483#issuecomment-620229892

@@ -1,12 +1,31 @@
 version: "3.9"
 
 services:
-  devenv:
-    build: .
-    #image: docker:dind
-    working_dir: /workspace
-    #tty: true
+  dockerd:
+    image: docker:dind
     privileged: true
+    hostname: dockerd
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      - docker-certs-ca:/certs/ca
+      - docker-certs-client:/certs/client
+    expose:
+      - 2376
+  docker:
+    image: docker
+    tty: true
+    environment:
+      - DOCKER_HOST=tcp://dockerd:2376
+      - DOCKER_TLS_VERIFY=1
+      - DOCKER_CERT_PATH=/certs/client
+    volumes:
+      - docker-certs-client:/certs/client:ro
+    depends_on:
+      - dockerd
+  devenv:
+    image: ubuntu
+    tty: true
     environment:
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock 
     volumes:
@@ -16,6 +35,7 @@ services:
 
 volumes:
   workspace:
-
+  docker-certs-ca:
+  docker-certs-client:
 
 # https://github.com/docker/for-mac/issues/483#issuecomment-620229892

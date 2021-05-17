@@ -2,16 +2,17 @@ version: "3.9"
 
 services:
   devenv:
-    image: docker:git
+    build: .
+    #image: docker:dind
     working_dir: /workspace
-    tty: true
+    #tty: true
+    privileged: true
     environment:
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock 
     volumes:
       - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
-      - /var/run/docker.sock:/var/run/docker.sock
       - ~/.gitconfig:/root/.gitconfig
-      - workspace:/workspace/
+      - workspace:/workspace
 
 volumes:
   workspace:
